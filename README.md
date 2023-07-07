@@ -10,18 +10,16 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 
 2. Export the ONNX model from HuggingFace pipeline:
 
-    ```$python export.py -m huggingface_model_path -o onnx_model_path```
+    ```$optimum-cli export onnx --model {HuggingFace model id} ./onnx_model/```
 
-
-    For example: python export.py -m "xxx/llama-7b-hf" -o "./llama.onnx"
-
+    For example: optimum-cli export onnx --model xxx/llama-7b-hf ./llama_model/"
 
     ***please follow the Licence on HuggingFace and get the approval from Meta before downloading llama checkpoints***
 
-3. Convert ONNX model to OpenVINO IR in FP16:
+4. Run restructured native OpenVINO pipeline:
 
-     ```$mo -m onnx_model_path --compress_to_fp16```
+    ```$python3 generate_ov.py -m  "{HuggingFace model id}" -p "what is openvino ?" ```
 
-4. Run restructured pipeline:
+4. (Optional) Run [Optimum-Intel OpenVINO pipeline](https://huggingface.co/docs/optimum/intel/inference)
 
-    ```$python generate.py -m openvino_model_path -t tokenizer_path -p prompt_sentence```
+    ```$python3 generate_op.py -m "{HuggingFace model id}" -p "what is openvino ?" ```

@@ -8,6 +8,7 @@ from threading import Thread
 from pathlib import Path
 import gradio as gr
 from typing import List
+import numpy as np
 
 parser = argparse.ArgumentParser(add_help=  False)
 parser.add_argument('-h', '--help', action='help', help='Show this help message and exit.')
@@ -150,7 +151,7 @@ examples = [
     "Explain difference between CPU and GPU",
     "Give five ideas for great weekend with family",
     "Do Androids dream of Electric sheep?",
-    "Who is Dolly?",
+    "Who is Llama?",
     "Please give me advice how to write resume?",
     "Name 3 advantages to be a cat",
     "Write instructions on how to become a good AI engineer",
@@ -159,7 +160,7 @@ examples = [
 
 with gr.Blocks() as demo:
     gr.Markdown(
-        "# Instruction following using Databricks Dolly 2.0 and OpenVINO.\n"
+        "# Instruction following using Llama and OpenVINO.\n"
         "Provide insturction which describes a task below or select among predefined examples and model writes response that performs requested task."
     )
 

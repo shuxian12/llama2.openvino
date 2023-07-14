@@ -87,6 +87,8 @@ if __name__ == "__main__":
     
     num_pkv = 2
     core = Core()
+
+    print(" --- reading model --- ")
     # read the model and corresponding weights from file
     model = core.read_model('./onnx_model/decoder_model_merged.onnx')
         
@@ -95,12 +97,14 @@ if __name__ == "__main__":
     key_value_input_names = [key for key in input_names if "key_values" in key]
     key_value_output_names = [key for key in output_names if "present" in key]
 
+    print(" --- model compiling --- ")
     # compile the model for CPU devices
     request = core.compile_model(model=model, device_name=args.device).create_infer_request()
     
     tokenizer = LlamaTokenizer.from_pretrained(args.model_id)
     inputs = tokenizer(args.prompt, return_tensors="np")
-    
+
+    print(" ---start generation --- ")
     start = time.perf_counter()
     output_ids = generate_sequence(inputs["input_ids"], inputs["attention_mask"], eos_token_id=tokenizer.eos_token_id, max_sequence_length=args.max_sequence_length)
     end = time.perf_counter()

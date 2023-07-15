@@ -16,10 +16,14 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 
     ***please follow the Licence on HuggingFace and get the approval from Meta before downloading llama checkpoints***
 
-4. Run restructured native OpenVINO pipeline:
+3. Run restructured native OpenVINO pipeline:
 
     ```$python3 generate_ov.py -m  "{HuggingFace model id}" -p "what is openvino ?" ```
 
 4. (Optional) Run [Optimum-Intel OpenVINO pipeline](https://huggingface.co/docs/optimum/intel/inference)
 
     ```$python3 generate_op.py -m "{HuggingFace model id}" -p "what is openvino ?" ```
+
+5. (Optional) Run interactive demo
+
+    ```$python3 gradio_demo.py -m "{HuggingFace model id}" ```

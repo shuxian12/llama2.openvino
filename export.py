@@ -9,7 +9,7 @@ parser.add_argument('-h',
                     action='help',
                     help='Show this help message and exit.')
 parser.add_argument('-m',
-                    '--model_path',
+                    '--model_id',
                     required=True,
                     type=str,
                     help='Required. orignal model path')
@@ -20,7 +20,7 @@ parser.add_argument('-o',
                     help='Required. onnx model path')
 args = parser.parse_args()
 
-model = LlamaForCausalLM.from_pretrained(args.model_path)
+model = LlamaForCausalLM.from_pretrained(args.model_id)
 inputs = {
     "input_ids": torch.randint(50, (1, 5)),
     "attention_mask": torch.randint(50, (1, 5)),

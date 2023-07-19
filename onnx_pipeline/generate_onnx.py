@@ -30,10 +30,17 @@ def get_top_k_logits(scores, top_k):
 
 def generate_sequence(input_ids, attention_mask, eos_token_id,
                       max_sequence_length):
-    cur_input_len = len(input_ids[0])
+    past_key_values = None
     while True:
         inputs = {}
-        if cur_input_len != 1:
+        if past_key_values is not None:
+            # Add the past_key_values to the decoder inputs
+            inputs = dict(zip(key_value_input_names, past_key_values))
+            inputs["use_cache_branch"] = np.array([True])
+            inputs["input_ids"] = input_ids[:, -1:]
+        else:
+            inputs["use_cache_branch"] = np.array([False])
+            inputs["input_ids"] = input_ids
             shape_input_ids = input_ids.shape
             num_attention_heads = 1
             for input_name in key_value_input_names:
@@ -46,15 +53,8 @@ def generate_sequence(input_ids, attention_mask, eos_token_id,
                     shape[1] = 0
                 inputs[input_name] = Tensor(model_inputs.get_element_type(),
                                             shape.get_shape())
-            inputs["use_cache_branch"] = np.array([False])
-            inputs["input_ids"] = input_ids
-            cur_input_len = 1
-        else:
-            # Add the past_key_values to the decoder inputs
-            inputs = dict(zip(key_value_input_names, past_key_values))
-            inputs["use_cache_branch"] = np.array([True])
-            inputs["input_ids"] = input_ids[:, -1:]
 
+        cur_input_len = len(inputs["input_ids"][0])
         # Add the attention_mask inputs when needed
         if "attention_mask" in input_names and attention_mask is not None:
             inputs["attention_mask"] = attention_mask
@@ -114,6 +114,7 @@ if __name__ == "__main__":
 
     num_pkv = 2
     core = Core()
+    core.set_property("GPU", {"INFERENCE_PRECISION_HINT": "f32"})
 
     print(" --- reading model --- ")
     # read the model and corresponding weights from file

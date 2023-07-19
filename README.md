@@ -8,7 +8,23 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 
     ```$pip install -r requirements.txt```
 
+
+### Option 1: OpenVINO IR pipeline
+2. Run [Optimum-Intel OpenVINO pipeline](https://huggingface.co/docs/optimum/intel/inference) and export the IR model
+
+    ```$cd ir_pipeline```
+
+    ```$python3 generate_op.py -m "{HuggingFace model id}" -p "what is openvino ?" -d "CPU"``` 
+
+3. (Optional) Run restructured pipeline:
+
+    ```$python3 generate_ir.py -m "{HuggingFace model id}" -p "what is openvino ?" -d "CPU"```
+
+### Option 2: ONNX pipeline, directly load a merged ONNX model to OpenVINO runtime
+
 2. Export the ONNX model from HuggingFace pipeline:
+
+    ```$cd onnx_pipeline```
 
     ```$optimum-cli export onnx --model {HuggingFace model id} ./onnx_model/```
 
@@ -16,14 +32,13 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 
     ***please follow the Licence on HuggingFace and get the approval from Meta before downloading llama checkpoints***
 
-3. Run restructured native OpenVINO pipeline:
+3. Run restructured pipeline:
 
-    ```$python3 generate_ov.py -m  "{HuggingFace model id}" -p "what is openvino ?" ```
+    ```$python3 generate_onnx.py -m  "{HuggingFace model id}" -p "what is openvino ?" -d "CPU"```
 
-4. (Optional) Run [Optimum-Intel OpenVINO pipeline](https://huggingface.co/docs/optimum/intel/inference)
 
-    ```$python3 generate_op.py -m "{HuggingFace model id}" -p "what is openvino ?" ```
+### Option 3: Interactive demo with Gradio
 
-5. (Optional) Run interactive demo
+2. Run interactive demo
 
     ```$python3 gradio_demo.py -m "{HuggingFace model id}" ```

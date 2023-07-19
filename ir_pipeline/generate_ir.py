@@ -111,7 +111,6 @@ if __name__ == "__main__":
 
     num_pkv = 2
     core = Core()
-    core.set_property("GPU", {"INFERENCE_PRECISION_HINT": "f32"})
 
     print(" --- reading model --- ")
     # read the model and corresponding weights from file

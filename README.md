@@ -3,7 +3,7 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 
 - ***Please follow the Licence on HuggingFace and get the approval from Meta before downloading llama checkpoints***
 
-- ***Please notice this repository is only for a functional test, and you can try to quantize the model to further optimize the performance of it***
+- ***Please notice this repository is only for a functional test and personal study, and you can try to quantize the model to further optimize the performance of it***
 
 ## How to run it?
 1. Install the requirements:

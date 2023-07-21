@@ -118,7 +118,7 @@ if __name__ == "__main__":
 
     print(" --- reading model --- ")
     # read the model and corresponding weights from file
-    model = core.read_model('./onnx_model/decoder_model_merged.onnx')
+    model = core.read_model('./ir_model/decoder_model_merged.xml')
 
     input_names = {
         key.get_any_name(): idx
@@ -139,7 +139,7 @@ if __name__ == "__main__":
     tokenizer = LlamaTokenizer.from_pretrained(args.model_id)
     inputs = tokenizer(args.prompt, return_tensors="np")
 
-    print(" ---start generation --- ")
+    print(" --- start generation --- ")
     start = time.perf_counter()
     output_ids = generate_sequence(
         inputs["input_ids"],

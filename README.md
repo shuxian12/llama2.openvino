@@ -1,7 +1,7 @@
 # llama2.openvino
 This sample shows how to implement a llama-based model with OpenVINO runtime.
 
-- ***Please follow the Licence on HuggingFace and get the approval from Meta before downloading llama checkpoints***
+- ***Please follow the Licence on HuggingFace and get the approval from Meta before downloading llama checkpoints, for more [information](https://huggingface.co/meta-llama/Llama-2-7b-hf)***
 
 - ***Please notice this repository is only for a functional test and personal study, and you can try to quantize the model to further optimize the performance of it***
 
@@ -11,7 +11,7 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
     ```$pip install -r requirements.txt```
 
 
-### Option 1: OpenVINO IR pipeline
+### Option 1: OpenVINO IR pipeline, export IR model from HF Optimum-Intel
 2. Run [Optimum-Intel OpenVINO pipeline](https://huggingface.co/docs/optimum/intel/inference) and export the IR model
 
     ```$cd ir_pipeline```
@@ -22,13 +22,19 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 
     ```$python3 generate_ir.py -m "meta-llama/Llama-2-7b-hf" -p "what is openvino ?" -d "CPU"```
 
-### Option 2: ONNX pipeline, directly load a merged ONNX model to OpenVINO runtime
+### Option 2: ONNX pipeline, export ONNX model from HF Optimum
 
-2. Export the ONNX model from HuggingFace pipeline:
+2. Export the ONNX model from HuggingFace Optimum and convert it to OpenVINO IR:
 
     ```$cd onnx_pipeline```
 
     ```$optimum-cli export onnx --model meta-llama/Llama-2-7b-hf ./onnx_model/```
+
+    ```$mkdir ir_model```
+
+    ```$mo -m ./onnx_model/decoder_.onnx -o ./ir_model/ --compress_to_fp16```
+
+    ```$rm ./onnx_model/ -rf```
 
 3. Run restructured pipeline:
 

@@ -135,7 +135,7 @@ if __name__ == "__main__":
     tokenizer = LlamaTokenizer.from_pretrained(args.model_id)
     inputs = tokenizer(args.prompt, return_tensors="np")
 
-    print(" ---start generation --- ")
+    print(" --- start generation --- ")
     start = time.perf_counter()
     output_ids = generate_sequence(
         inputs["input_ids"],

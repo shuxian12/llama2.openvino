@@ -1,4 +1,4 @@
-# llama_openvino
+# llama2.openvino
 This sample shows how to implement a llama-based model with OpenVINO runtime.
 
 - ***Please follow the Licence on HuggingFace and get the approval from Meta before downloading llama checkpoints***
@@ -16,11 +16,11 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 
     ```$cd ir_pipeline```
 
-    ```$python3 generate_op.py -m "decapoda-research/llama-7b-hf" -p "what is openvino ?" -d "CPU"``` 
+    ```$python3 generate_op.py -m "meta-llama/Llama-2-7b-hf" -p "what is openvino ?" -d "CPU"``` 
 
 3. (Optional) Run restructured pipeline:
 
-    ```$python3 generate_ir.py -m "decapoda-research/llama-7b-hf" -p "what is openvino ?" -d "CPU"```
+    ```$python3 generate_ir.py -m "meta-llama/Llama-2-7b-hf" -p "what is openvino ?" -d "CPU"```
 
 ### Option 2: ONNX pipeline, directly load a merged ONNX model to OpenVINO runtime
 
@@ -28,15 +28,15 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 
     ```$cd onnx_pipeline```
 
-    ```$optimum-cli export onnx --model decapoda-research/llama-7b-hf ./onnx_model/```
+    ```$optimum-cli export onnx --model meta-llama/Llama-2-7b-hf ./onnx_model/```
 
 3. Run restructured pipeline:
 
-    ```$python3 generate_onnx.py -m  "decapoda-research/llama-7b-hf" -p "what is openvino ?" -d "CPU"```
+    ```$python3 generate_onnx.py -m  "meta-llama/Llama-2-7b-hf" -p "what is openvino ?" -d "CPU"```
 
 
 ### Option 3: Interactive demo with Gradio
 
 2. Run interactive demo
 
-    ```$python3 gradio_demo.py -m "decapoda-research/llama-7b-hf" ```
+    ```$python3 gradio_demo.py -m "meta-llama/Llama-2-7b-hf" ```

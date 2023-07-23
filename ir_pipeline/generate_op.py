@@ -33,7 +33,7 @@ parser.add_argument('-d',
                     help='device for inference')
 args = parser.parse_args()
 
-model_path = Path('ir_model')
+model_path = Path('../ir_model')
 
 if model_path.exists():
     ov_model = OVModelForCausalLM.from_pretrained(model_path,
@@ -55,5 +55,5 @@ end = time.perf_counter()
 output_text = tokenizer.batch_decode(generate_ids,
                                      skip_special_tokens=True,
                                      clean_up_tokenization_spaces=False)[0]
-print(f"Generation took {end - start:.3f} s")
+print(f"Generation took {end - start:.3f} s on {args.device}")
 print(f"Response: {output_text}")

@@ -114,7 +114,6 @@ if __name__ == "__main__":
 
     num_pkv = 2
     core = Core()
-    core.set_property("GPU", {"INFERENCE_PRECISION_HINT": "f32"})
 
     print(" --- reading model --- ")
     # read the model and corresponding weights from file
@@ -139,7 +138,7 @@ if __name__ == "__main__":
     tokenizer = LlamaTokenizer.from_pretrained(args.model_id)
     inputs = tokenizer(args.prompt, return_tensors="np")
 
-    print(" --- start generation --- ")
+    print(" --- start generating --- ")
     start = time.perf_counter()
     output_ids = generate_sequence(
         inputs["input_ids"],
@@ -152,5 +151,5 @@ if __name__ == "__main__":
     output_text = tokenizer.batch_decode(output_ids,
                                          skip_special_tokens=True,
                                          clean_up_tokenization_spaces=False)[0]
-    print(f"Generation took {end - start:.3f} s")
+    print(f"Generation took {end - start:.3f} s on {args.device}")
     print(f"Response: {output_text}")

@@ -8,11 +8,17 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 ## How to run it?
 1. Install the requirements:
 
+    ```python3 -m venv openvino_env```
+
+    ```source openvino_env/bin/activate```
+
     ```$pip install -r requirements.txt```
 
 
 ### Option 1: OpenVINO IR pipeline, export IR model from HF Optimum-Intel
 2. Run [Optimum-Intel OpenVINO pipeline](https://huggingface.co/docs/optimum/intel/inference) and export the IR model
+
+    ```$python3 export_ir.py -m 'meta-llama/Llama-2-7b-chat-hf' -o './ir_model``
 
     ```$cd ir_pipeline```
 
@@ -21,6 +27,7 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 3. (Optional) Run restructured pipeline:
 
     ```$python3 generate_ir.py -m "meta-llama/Llama-2-7b-hf" -p "what is openvino ?" -d "CPU"```
+
 
 ### Option 2: ONNX pipeline, export ONNX model from HF Optimum
 
@@ -41,8 +48,18 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
     ```$python3 generate_onnx.py -m  "meta-llama/Llama-2-7b-hf" -p "what is openvino ?" -d "CPU"```
 
 
-### Option 3: Interactive demo with Gradio
+### Option 3: Interactive demo
 
-2. Run interactive demo
+2. Run interactive Q&A demo with Gradio
 
-    ```$python3 gradio_demo.py -m "meta-llama/Llama-2-7b-hf" ```
+    ```$cd demo```
+
+    ```$python3 qa_gradio.py -m "meta-llama/Llama-2-7b-hf" ```
+
+2. or Chat Robot demo with Streamlit
+
+    ```python3 export_ir.py -m 'meta-llama/Llama-2-7b-chat-hf' -o './ir_model_chat```
+
+    ```$cd demo```
+
+    ```$streamlit run chat_streamlit.py " ```

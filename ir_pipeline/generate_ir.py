@@ -31,6 +31,7 @@ def get_top_k_logits(scores, top_k):
 def generate_sequence(input_ids, attention_mask, eos_token_id,
                       max_sequence_length):
     past_key_values = None
+    count = 0
     while True:
         inputs = {}
         if past_key_values is not None:
@@ -57,6 +58,7 @@ def generate_sequence(input_ids, attention_mask, eos_token_id,
             inputs["attention_mask"] = attention_mask
         request.start_async(inputs, shared_memory=True)
         request.wait()
+        count +=1
         logits = request.get_tensor("logits").data
         past_key_values = tuple(
             request.get_tensor(key).data for key in key_value_output_names)
@@ -76,7 +78,7 @@ def generate_sequence(input_ids, attention_mask, eos_token_id,
             input_ids = np.concatenate((input_ids, [next_tokens]), axis=-1)
             attention_mask = np.concatenate(
                 (attention_mask, [[1] * len(next_tokens)]), axis=-1)
-    return input_ids
+    return input_ids, count
 
 
 if __name__ == "__main__":
@@ -114,7 +116,7 @@ if __name__ == "__main__":
 
     print(" --- reading model --- ")
     # read the model and corresponding weights from file
-    model = core.read_model('./ir_model/openvino_model.xml')
+    model = core.read_model('../ir_model/openvino_model.xml')
 
     input_names = {
         key.get_any_name(): idx
@@ -135,9 +137,9 @@ if __name__ == "__main__":
     tokenizer = LlamaTokenizer.from_pretrained(args.model_id)
     inputs = tokenizer(args.prompt, return_tensors="np")
 
-    print(" --- start generation --- ")
+    print(" --- start generating --- ")
     start = time.perf_counter()
-    output_ids = generate_sequence(
+    output_ids, num_tokens = generate_sequence(
         inputs["input_ids"],
         inputs["attention_mask"],
         eos_token_id=tokenizer.eos_token_id,
@@ -148,5 +150,5 @@ if __name__ == "__main__":
     output_text = tokenizer.batch_decode(output_ids,
                                          skip_special_tokens=True,
                                          clean_up_tokenization_spaces=False)[0]
-    print(f"Generation took {end - start:.3f} s")
+    print(f"Generated {num_tokens} tokens in {end - start:.3f} s on {args.device}")
     print(f"Response: {output_text}")

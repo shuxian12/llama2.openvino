@@ -1,6 +1,9 @@
 # llama2.openvino
 This sample shows how to implement a llama-based model with OpenVINO runtime.
 
+<img width="947" alt="MicrosoftTeams-image (2)" src="https://github.com/OpenVINO-dev-contest/llama2.openvino/assets/91237924/c210507f-1fb2-4c68-a8d9-dae945df07d3">
+
+
 - ***Please follow the Licence on HuggingFace and get the approval from Meta before downloading llama checkpoints, for more [information](https://huggingface.co/meta-llama/Llama-2-7b-hf)***
 
 - ***Please notice this repository is only for a functional test and personal study, and you can try to quantize the model to further optimize the performance of it***
@@ -18,7 +21,7 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 ### Option 1: OpenVINO IR pipeline, export IR model from HF Optimum-Intel
 2. Run [Optimum-Intel OpenVINO pipeline](https://huggingface.co/docs/optimum/intel/inference) and export the IR model
 
-    ```$python3 export_ir.py -m 'meta-llama/Llama-2-7b-chat-hf' -o './ir_model``
+    ```$python3 export_ir.py -m 'meta-llama/Llama-2-7b-chat-hf' -o './ir_model'``
 
     ```$cd ir_pipeline```
 
@@ -58,8 +61,8 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 
 2. or Chat Robot demo with Streamlit
 
-    ```python3 export_ir.py -m 'meta-llama/Llama-2-7b-chat-hf' -o './ir_model_chat```
+    ```python3 export_ir.py -m 'meta-llama/Llama-2-7b-chat-hf' -o './ir_model_chat'```
 
     ```$cd demo```
 
-    ```$streamlit run chat_streamlit.py " ```
+    ```$streamlit run chat_streamlit.py```

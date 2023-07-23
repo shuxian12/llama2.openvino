@@ -25,7 +25,7 @@ core = Core()
 available_devices = core.available_devices
 current_device = "CPU"
 
-model_path = Path('ir_model')
+model_path = Path('../ir_model')
 if model_path.exists():
     ov_model = OVModelForCausalLM.from_pretrained(model_path,
                                                   device=current_device)

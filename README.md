@@ -21,7 +21,7 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 ### Option 1: OpenVINO IR pipeline, export IR model from HF Optimum-Intel
 2. Run [Optimum-Intel OpenVINO pipeline](https://huggingface.co/docs/optimum/intel/inference) and export the IR model
 
-    ```$python3 export_ir.py -m 'meta-llama/Llama-2-7b-chat-hf' -o './ir_model'``
+    ```$python3 export_ir.py -m 'meta-llama/Llama-2-7b-chat-hf' -o './ir_model'```
 
     ```$cd ir_pipeline```
 

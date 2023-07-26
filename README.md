@@ -48,7 +48,7 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 
     ```$optimum-cli export onnx --model meta-llama/Llama-2-7b-hf ./onnx_model/```
 
-    ```$mkdir ir_model``
+    ```$mkdir ir_model```
 
     ```$mo -m ./onnx_model/decoder_model_merged.onnx -o ./ir_model/ --compress_to_fp16```
 

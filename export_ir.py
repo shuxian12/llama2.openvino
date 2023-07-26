@@ -25,5 +25,6 @@ if __name__ == "__main__":
     model_path = Path(args.output)
 
     ov_model = OVModelForCausalLM.from_pretrained(args.model_id,
+                                                  compile=False,
                                                   from_transformers=True)
     ov_model.save_pretrained(model_path)

@@ -29,8 +29,9 @@ class LlamaModel():
         self.tokenizer = LlamaTokenizer.from_pretrained(tokenizer_path,
                                                         trust_remote_code=True)
         self.ov_model = OVModelForCausalLM.from_pretrained(model_path,
+                                                           compile=False,
                                                            device=device)
-
+        self.ov_model.compile()
     def generate_iterate(self, prompt: str, max_generated_tokens, top_k, top_p,
                          temperature):
         # Tokenize the user text.

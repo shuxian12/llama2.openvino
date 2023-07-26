@@ -27,14 +27,19 @@ current_device = "CPU"
 
 model_path = Path('../ir_model')
 if model_path.exists():
+    print("--- using local model ---")
     ov_model = OVModelForCausalLM.from_pretrained(model_path,
+                                                  compile=False,
                                                   device=current_device)
 else:
+    print("--- using remote model ---")
     ov_model = OVModelForCausalLM.from_pretrained(args.model_id,
+                                                  compile=False,
                                                   device=current_device,
                                                   from_transformers=True)
     ov_model.save_pretrained(model_path)
 
+ov_model.compile()
 tokenizer = LlamaTokenizer.from_pretrained(args.model_id)
 
 INSTRUCTION_KEY = "### Instruction:"

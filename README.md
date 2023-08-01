@@ -12,7 +12,7 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 
 |                  | Description
 |----------------- | ----------------------------------------
-| RAM              | 128GB + 
+| RAM              | 64GB + 
 
 ## How to run it?
 1. Install the requirements:

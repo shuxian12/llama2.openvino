@@ -45,7 +45,7 @@ else:
     ov_model = OVModelForCausalLM.from_pretrained(args.model_id,
                                                   compile=False,
                                                   device=args.device,
-                                                  from_transformers=True)
+                                                  export=True)
     ov_model.save_pretrained(model_path)
 
 ov_model.compile()

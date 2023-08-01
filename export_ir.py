@@ -1,4 +1,3 @@
-from transformers import LlamaTokenizer
 from optimum.intel.openvino import OVModelForCausalLM
 import argparse
 from pathlib import Path
@@ -26,5 +25,6 @@ if __name__ == "__main__":
 
     ov_model = OVModelForCausalLM.from_pretrained(args.model_id,
                                                   compile=False,
-                                                  from_transformers=True)
+                                                  export=True)
+    ov_model.half()
     ov_model.save_pretrained(model_path)

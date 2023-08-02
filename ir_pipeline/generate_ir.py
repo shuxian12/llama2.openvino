@@ -1,5 +1,5 @@
 from transformers import LlamaTokenizer
-from openvino.runtime import Core, PartialShape, Tensor
+from openvino.runtime import Core, Tensor
 import numpy as np
 import argparse
 import time

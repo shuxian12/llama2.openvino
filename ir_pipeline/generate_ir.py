@@ -1,5 +1,5 @@
 from transformers import LlamaTokenizer
-from openvino.runtime import Core, Tensor
+from openvino.runtime import Core, PartialShape, Tensor
 import numpy as np
 import argparse
 import time
@@ -28,7 +28,7 @@ def get_top_k_logits(scores, top_k):
     return filtred_scores
 
 
-def generate_sequence(input_ids, attention_mask, eos_token_id,
+def generate_sequence(sampling, input_ids, attention_mask, eos_token_id,
                       max_sequence_length):
     past_key_values = None
     prompt_len = len(input_ids[0])
@@ -53,13 +53,12 @@ def generate_sequence(input_ids, attention_mask, eos_token_id,
                     shape[1] = 0
                 inputs[input_name] = Tensor(model_inputs.get_element_type(),
                                             shape.get_shape())
-
         cur_input_len = len(inputs["input_ids"][0])
         if "attention_mask" in input_names and attention_mask is not None:
             inputs["attention_mask"] = attention_mask
         request.start_async(inputs, shared_memory=True)
         request.wait()
-        count +=1
+        count += 1
         logits = request.get_tensor("logits").data
         past_key_values = tuple(
             request.get_tensor(key).data for key in key_value_output_names)
@@ -70,9 +69,17 @@ def generate_sequence(input_ids, attention_mask, eos_token_id,
         top_k = 20
         next_token_scores = get_top_k_logits(next_token_scores, top_k)
         # get next token id
-        next_tokens = np.argmax(next_token_scores, axis=-1)
+        if sampling:
+            probs = softmax(next_token_scores)
+            next_tokens = np.random.choice(probs.shape[-1],
+                                           1,
+                                           p=probs[0],
+                                           replace=True)
+        else:
+            next_tokens = np.argmax(next_token_scores, axis=-1)
         # break the loop if max length or end of text token is reached
-        if (len(input_ids[0])-prompt_len) == max_sequence_length or next_tokens == eos_token_id:
+        if (len(input_ids[0]) - prompt_len
+            ) == max_sequence_length or next_tokens == eos_token_id:
             break
         else:
             input_ids = np.concatenate((input_ids, [next_tokens]), axis=-1)
@@ -109,6 +116,12 @@ if __name__ == "__main__":
                         required=False,
                         type=str,
                         help='device for inference')
+    parser.add_argument('-s',
+                        '--sampling',
+                        default=True,
+                        required=False,
+                        type=bool,
+                        help='sampling or not')
     args = parser.parse_args()
 
     num_pkv = 2
@@ -117,7 +130,6 @@ if __name__ == "__main__":
     print(" --- reading model --- ")
     # read the model and corresponding weights from file
     model = core.read_model('../ir_model/openvino_model.xml')
-
     input_names = {
         key.get_any_name(): idx
         for idx, key in enumerate(model.inputs)
@@ -140,15 +152,21 @@ if __name__ == "__main__":
     print(" --- start generating --- ")
     start = time.perf_counter()
     output_ids, num_tokens = generate_sequence(
+        args.sampling,
         inputs["input_ids"],
         inputs["attention_mask"],
         eos_token_id=tokenizer.eos_token_id,
-        max_sequence_length=args.max_sequence_length)
+        max_sequence_length=args.max_sequence_length,
+    )
     end = time.perf_counter()
     output_text = " "
     # Convert IDs to words and make the sentence from it
+    
+    print(" --- text decoding --- ")
     output_text = tokenizer.batch_decode(output_ids,
                                          skip_special_tokens=True,
                                          clean_up_tokenization_spaces=False)[0]
-    print(f"Generated {num_tokens} tokens in {end - start:.3f} s on {args.device}")
+    print(
+        f"Generated {num_tokens} tokens in {end - start:.3f} s on {args.device}"
+    )
     print(f"Response: {output_text}")

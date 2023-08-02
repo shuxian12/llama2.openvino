@@ -28,7 +28,7 @@ def get_top_k_logits(scores, top_k):
     return filtred_scores
 
 
-def generate_sequence(input_ids, attention_mask, eos_token_id,
+def generate_sequence(sampling, input_ids, attention_mask, eos_token_id,
                       max_sequence_length):
     past_key_values = None
     while True:
@@ -70,7 +70,14 @@ def generate_sequence(input_ids, attention_mask, eos_token_id,
         top_k = 20
         next_token_scores = get_top_k_logits(next_token_scores, top_k)
         # get next token id
-        next_tokens = np.argmax(next_token_scores, axis=-1)
+        if sampling:
+            probs = softmax(next_token_scores)
+            next_tokens = np.random.choice(probs.shape[-1],
+                                           1,
+                                           p=probs[0],
+                                           replace=True)
+        else:
+            next_tokens = np.argmax(next_token_scores, axis=-1)
         # break the loop if max length or end of text token is reached
         if len(input_ids[0]
                ) == max_sequence_length or next_tokens == eos_token_id:
@@ -110,6 +117,12 @@ if __name__ == "__main__":
                         required=False,
                         type=str,
                         help='device for inference')
+    parser.add_argument('-s',
+                        '--sampling',
+                        default=True,
+                        required=False,
+                        type=bool,
+                        help='sampling or not')
     args = parser.parse_args()
 
     num_pkv = 2
@@ -141,6 +154,7 @@ if __name__ == "__main__":
     print(" --- start generating --- ")
     start = time.perf_counter()
     output_ids = generate_sequence(
+        args.sampling,
         inputs["input_ids"],
         inputs["attention_mask"],
         eos_token_id=tokenizer.eos_token_id,
@@ -148,6 +162,7 @@ if __name__ == "__main__":
     end = time.perf_counter()
     output_text = " "
     # Convert IDs to words and make the sentence from it
+    print(" --- text decoding --- ")
     output_text = tokenizer.batch_decode(output_ids,
                                          skip_special_tokens=True,
                                          clean_up_tokenization_spaces=False)[0]

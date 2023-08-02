@@ -33,7 +33,7 @@ parser.add_argument('-d',
                     help='device for inference')
 args = parser.parse_args()
 
-model_path = Path('../ir_model')
+model_path = Path('../quantized_model')
 
 if model_path.exists():
     print("--- using local model ---")
@@ -57,6 +57,7 @@ generate_ids = ov_model.generate(inputs.input_ids,
                                  max_length=args.max_sequence_length)
 end = time.perf_counter()
 
+print(" --- text decoding --- ")
 output_text = tokenizer.batch_decode(generate_ids,
                                      skip_special_tokens=True,
                                      clean_up_tokenization_spaces=False)[0]

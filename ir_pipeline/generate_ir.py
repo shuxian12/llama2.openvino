@@ -31,6 +31,7 @@ def get_top_k_logits(scores, top_k):
 def generate_sequence(input_ids, attention_mask, eos_token_id,
                       max_sequence_length):
     past_key_values = None
+    prompt_len = len(input_ids[0])
     count = 0
     while True:
         inputs = {}
@@ -71,8 +72,7 @@ def generate_sequence(input_ids, attention_mask, eos_token_id,
         # get next token id
         next_tokens = np.argmax(next_token_scores, axis=-1)
         # break the loop if max length or end of text token is reached
-        if len(input_ids[0]
-               ) == max_sequence_length or next_tokens == eos_token_id:
+        if (len(input_ids[0])-prompt_len) == max_sequence_length or next_tokens == eos_token_id:
             break
         else:
             input_ids = np.concatenate((input_ids, [next_tokens]), axis=-1)

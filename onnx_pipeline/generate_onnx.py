@@ -67,10 +67,10 @@ def generate_sequence(sampling, input_ids, attention_mask, eos_token_id,
         # pre-process distribution
         next_token_scores = process_logits(cur_input_len, next_token_logits,
                                            eos_token_id)
-        top_k = 20
-        next_token_scores = get_top_k_logits(next_token_scores, top_k)
         # get next token id
         if sampling:
+            top_k = 20
+            next_token_scores = get_top_k_logits(next_token_scores, top_k)
             probs = softmax(next_token_scores)
             next_tokens = np.random.choice(probs.shape[-1],
                                            1,

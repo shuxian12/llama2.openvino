@@ -67,7 +67,7 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 
     ```$python3 qa_gradio.py -m "meta-llama/Llama-2-7b-hf" ```
 
-2. or Chat Robot demo with Streamlit
+2. or chatbot demo with Streamlit
 
     ```python3 export_ir.py -m 'meta-llama/Llama-2-7b-chat-hf' -o './ir_model_chat'```
 

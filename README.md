@@ -24,7 +24,7 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
     ```$pip install -r requirements.txt```
 
 
-### Option 1: OpenVINO IR pipeline, export IR model from HF Optimum-Intel
+### Deployment method 1: OpenVINO IR pipeline, export IR model from HF Optimum-Intel
 2. Run [Optimum-Intel OpenVINO pipeline](https://huggingface.co/docs/optimum/intel/inference) and export the IR model
 
     ```$python3 export_ir.py -m 'meta-llama/Llama-2-7b-hf' -o './ir_model'```
@@ -38,7 +38,7 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
     ```$python3 generate_ir.py -m "meta-llama/Llama-2-7b-hf" -p "what is openvino ?" -d "CPU"```
 
 
-### Option 2: ONNX pipeline, export ONNX model from HF Optimum
+### Deployment method 2: ONNX pipeline, export ONNX model from HF Optimum
 
 2. Export the ONNX model from HuggingFace Optimum and convert it to OpenVINO IR:
 
@@ -59,7 +59,7 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
     ```$python3 generate_onnx.py -m  "meta-llama/Llama-2-7b-hf" -p "what is openvino ?" -d "CPU"```
 
 
-### Option 3: Interactive demo
+### Interactive demo
 
 2. Run interactive Q&A demo with Gradio
 

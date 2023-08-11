@@ -50,7 +50,7 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 
     $ mo -m ./onnx_model/decoder_model_merged.onnx -o ./ir_model/ --compress_to_fp16
 
-    $rm ./onnx_model/ -rf
+    $ rm ./onnx_model/ -rf
 
 **2. Run restructured pipeline**:
 

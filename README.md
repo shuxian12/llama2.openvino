@@ -16,25 +16,25 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 
 ## Install the requirements
 
-    $python3 -m venv openvino_env
+    $ python3 -m venv openvino_env
 
-    $source openvino_env/bin/activate
+    $ source openvino_env/bin/activate
 
-    $pip install -r requirements.txt
+    $ pip install -r requirements.txt
 
 
 ## Deployment Method 1: OpenVINO IR pipeline, export IR model from HF Optimum-Intel
 **1. Run [Optimum-Intel OpenVINO pipeline](https://huggingface.co/docs/optimum/intel/inference) and export the IR model**
 
-    ```$python3 export_ir.py -m 'meta-llama/Llama-2-7b-hf' -o './ir_model'```
+    $ python3 export_ir.py -m 'meta-llama/Llama-2-7b-hf' -o './ir_model'
 
-    ```$cd ir_pipeline```
+    $ cd ir_pipeline```
 
-    ```$python3 generate_op.py -m "meta-llama/Llama-2-7b-hf" -p "what is openvino ?" -d "CPU"``` 
+    $ python3 generate_op.py -m "meta-llama/Llama-2-7b-hf" -p "what is openvino ?" -d "CPU"
 
 **2. (Optional) Run restructured pipeline**:
 
-    $python3 generate_ir.py -m "meta-llama/Llama-2-7b-hf" -p "what is openvino ?" -d "CPU"
+    $ python3 generate_ir.py -m "meta-llama/Llama-2-7b-hf" -p "what is openvino ?" -d "CPU"
 
 
 ## Deployment Method 2: ONNX pipeline, export ONNX model from HF Optimum
@@ -42,13 +42,13 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 
 **1. Export the ONNX model from HuggingFace Optimum and convert it to OpenVINO IR**:
 
-    $cd onnx_pipeline
+    $ cd onnx_pipeline
 
-    $optimum-cli export onnx --model meta-llama/Llama-2-7b-hf ./onnx_model/
+    $ optimum-cli export onnx --model meta-llama/Llama-2-7b-hf ./onnx_model/
 
-    $mkdir ir_model
+    $ mkdir ir_model
 
-    $mo -m ./onnx_model/decoder_model_merged.onnx -o ./ir_model/ --compress_to_fp16
+    $ mo -m ./onnx_model/decoder_model_merged.onnx -o ./ir_model/ --compress_to_fp16
 
     $rm ./onnx_model/ -rf
 
@@ -61,14 +61,14 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 
 **1. Run interactive Q&A demo with Gradio**:
 
-    $cd demo
+    $ cd demo
 
-    $python3 qa_gradio.py -m "meta-llama/Llama-2-7b-hf" 
+    $ python3 qa_gradio.py -m "meta-llama/Llama-2-7b-hf" 
 
 **2. or chatbot demo with Streamlit**:
 
-    $python3 export_ir.py -m 'meta-llama/Llama-2-7b-chat-hf' -o './ir_model_chat'```
+    $ python3 export_ir.py -m 'meta-llama/Llama-2-7b-chat-hf' -o './ir_model_chat'
 
-    $cd demo
+    $ cd demo
 
     $streamlit run chat_streamlit.py

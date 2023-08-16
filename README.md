@@ -13,6 +13,7 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 |                  | Description
 |----------------- | ----------------------------------------
 | RAM              | 128Gb + 
+| OS               | Ubuntu 20.04/22.04
 
 ## Install the requirements
 
@@ -20,6 +21,10 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 
     $ source openvino_env/bin/activate
 
+    $ python3 -m pip install --upgrade pip
+    
+    $ pip install wheel setuptools
+    
     $ pip install -r requirements.txt
 
 

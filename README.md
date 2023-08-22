@@ -33,7 +33,7 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 
     $ python3 export_ir.py -m 'meta-llama/Llama-2-7b-hf' -o './ir_model'
 
-    $ cd ir_pipeline```
+    $ cd ir_pipeline
 
     $ python3 generate_op.py -m "meta-llama/Llama-2-7b-hf" -p "what is openvino ?" -d "CPU"
 

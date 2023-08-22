@@ -52,6 +52,8 @@ ov_model.compile()
 tokenizer = LlamaTokenizer.from_pretrained(args.model_id)
 
 inputs = tokenizer(args.prompt, return_tensors="pt")
+
+print(" --- start generating --- ")
 start = time.perf_counter()
 generate_ids = ov_model.generate(inputs.input_ids,
                                  max_length=args.max_sequence_length)

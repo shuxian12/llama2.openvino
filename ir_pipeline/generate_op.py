@@ -33,7 +33,7 @@ parser.add_argument('-d',
                     help='device for inference')
 args = parser.parse_args()
 
-model_path = Path('../quantized_model')
+model_path = Path('../ir_model')
 
 if model_path.exists():
     print("--- using local model ---")

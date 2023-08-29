@@ -13,7 +13,7 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 - Linux, Windows, MacOS
 - Python >= 3.7.0
 - CPU or GPU compatible with OpenVINO.
-- RAM >= 64GB
+- CPU RAM >= 32GB + dGPU >= 16GB or CPU RAM >= 64GB
 
 ## Install the requirements
 

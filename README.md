@@ -41,7 +41,7 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 
     $ python3 export_op.py -m 'meta-llama/Llama-2-7b-hf'
 
-**1.1 Export IR model with int8 weight (optional)**
+**1.1.  (Optional) Export IR model with int8 weight**
 
     $ python3 export_ir.py -m 'meta-llama/Llama-2-7b-hf' -cw=True
 
@@ -56,7 +56,7 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
     $ python3 generate_ir.py -m "meta-llama/Llama-2-7b-hf" -p "what is openvino ?" -d "CPU"
 
 
-## Deployment Method 3: ONNX pipeline, export ONNX model from HF Optimum
+## (Optional) Deployment Method 2: ONNX pipeline, export ONNX model from HF Optimum
 - Please notice the step below will leadd large memory consumption, you have make sure your server should be with >256GB RAM
 
 **1. Export the ONNX model from HuggingFace Optimum and convert it to OpenVINO IR**:

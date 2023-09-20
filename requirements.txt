@@ -5,6 +5,7 @@ openvino-dev==2023.1.0
 optimum
 git+https://github.com/huggingface/transformers.git
 git+https://github.com/huggingface/optimum-intel.git
+nncf==2.6.0
 sentencepiece
 gradio
 onnx>=1.11.0

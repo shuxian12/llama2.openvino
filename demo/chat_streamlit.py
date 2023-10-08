@@ -1,10 +1,24 @@
 from model import LlamaModel, build_inputs
 import streamlit as st
 from streamlit_chat import message
+import argparse
 
 @st.cache_resource
 def create_model():
-    return LlamaModel("meta-llama/Llama-2-7b-chat-hf")
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument('-h',
+                        '--help',
+                        action='help',
+                        help='Show this help message and exit.')
+    parser.add_argument(
+        '-m',
+        '--model_id',
+        required=True,
+        type=str,
+        help='local model path or remote model id'
+    )
+    args = parser.parse_args()
+    return LlamaModel(args.model_id)
 
 with st.spinner("Loading models"):
     ov_llama = create_model()

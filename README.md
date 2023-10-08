@@ -47,13 +47,11 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 
 **2. Run [Optimum-Intel OpenVINO pipeline](https://huggingface.co/docs/optimum/intel/inference)**
 
-    $ cd ir_pipeline
-
-    $ python3 generate_op.py -m "meta-llama/Llama-2-7b-hf" -p "what is openvino ?" -d "CPU"
+    $ python3 ir_pipeline/generate_op.py -m "./ir_model" -p "what is openvino ?" -d "CPU"
 
 **3. (Optional) Run restructured pipeline**:
 
-    $ python3 generate_ir.py -m "meta-llama/Llama-2-7b-hf" -p "what is openvino ?" -d "CPU"
+    $ python3 ir_pipeline/generate_ir.py -m "./ir_model" -p "what is openvino ?" -d "CPU"
 
 
 ## (Optional) Deployment Method 2: ONNX pipeline, export ONNX model from HF Optimum
@@ -73,21 +71,17 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 
 **2. Run restructured pipeline**:
 
-    $python3 generate_onnx.py -m  "meta-llama/Llama-2-7b-hf" -p "what is openvino ?" -d "CPU"
+    $ python3 generate_onnx.py -m  "meta-llama/Llama-2-7b-hf" -p "what is openvino ?" -d "CPU"
 
 
 ## Interactive demo
 
 **1. Run interactive Q&A demo with Gradio**:
 
-    $ cd demo
-
-    $ python3 qa_gradio.py -m "meta-llama/Llama-2-7b-hf" 
+    $ python3 demo/qa_gradio.py -m "./ir_model" 
 
 **2. or chatbot demo with Streamlit**:
 
     $ python3 export_ir.py -m 'meta-llama/Llama-2-7b-chat-hf' -o './ir_model_chat' # "-cw=True" to get model with int8 weight
 
-    $ cd demo
-
-    $streamlit run chat_streamlit.py
+    $ streamlit run demo/chat_streamlit.py -- -m './ir_model_chat'

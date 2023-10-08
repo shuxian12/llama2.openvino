@@ -2,7 +2,6 @@ from transformers import LlamaTokenizer
 from optimum.intel.openvino import OVModelForCausalLM
 import time
 import argparse
-from pathlib import Path
 
 parser = argparse.ArgumentParser(add_help=False)
 parser.add_argument('-h',
@@ -13,7 +12,7 @@ parser.add_argument('-m',
                     '--model_id',
                     required=True,
                     type=str,
-                    help='Required. hugging face model id')
+                    help='Required. hugging face model id or local model path')
 parser.add_argument('-p',
                     '--prompt',
                     required=True,
@@ -33,29 +32,22 @@ parser.add_argument('-d',
                     help='device for inference')
 args = parser.parse_args()
 
-model_path = Path('../ir_model')
-
-if model_path.exists():
-    print("--- using local model ---")
-    ov_model = OVModelForCausalLM.from_pretrained(model_path,
-                                                  compile=False,
-                                                  device=args.device)
-else:
-    print("--- using remote model ---")
-    ov_model = OVModelForCausalLM.from_pretrained(args.model_id,
-                                                  compile=False,
-                                                  device=args.device,
-                                                  export=True)
-    ov_model.save_pretrained(model_path)
-
-ov_model.compile()
+print(" --- load tokenizer --- ")
 tokenizer = LlamaTokenizer.from_pretrained(args.model_id)
+
+try:
+    print(" --- use local model --- ")
+    model = OVModelForCausalLM.from_pretrained(args.model_id, compile=False, device=args.device)
+except:
+    print(" --- use remote model --- ")
+    model = OVModelForCausalLM.from_pretrained(args.model_id, compile=False, device=args.device, export=True)
+model.compile()
 
 inputs = tokenizer(args.prompt, return_tensors="pt")
 
 print(" --- start generating --- ")
 start = time.perf_counter()
-generate_ids = ov_model.generate(inputs.input_ids,
+generate_ids = model.generate(inputs.input_ids,
                                  max_length=args.max_sequence_length)
 end = time.perf_counter()
 

@@ -25,22 +25,16 @@ core = Core()
 available_devices = core.available_devices
 current_device = "CPU"
 
-model_path = Path('../ir_model')
-if model_path.exists():
-    print("--- using local model ---")
-    ov_model = OVModelForCausalLM.from_pretrained(model_path,
-                                                  compile=False,
-                                                  device=current_device)
-else:
-    print("--- using remote model ---")
-    ov_model = OVModelForCausalLM.from_pretrained(args.model_id,
-                                                  compile=False,
-                                                  device=current_device,
-                                                  from_transformers=True)
-    ov_model.save_pretrained(model_path)
-
-ov_model.compile()
+print(" --- load tokenizer --- ")
 tokenizer = LlamaTokenizer.from_pretrained(args.model_id)
+
+try:
+    print(" --- use local model --- ")
+    model = OVModelForCausalLM.from_pretrained(args.model_id, compile=False, device=args.device)
+except:
+    print(" --- use remote model --- ")
+    model = OVModelForCausalLM.from_pretrained(args.model_id, compile=False, device=args.device, export=True)
+model.compile()
 
 INSTRUCTION_KEY = "### Instruction:"
 RESPONSE_KEY = "### Response:"
@@ -86,7 +80,7 @@ def run_generation(user_text: str, top_p: float, temperature: float,
                            temperature=float(temperature),
                            top_k=top_k,
                            eos_token_id=tokenizer.eos_token_id)
-    t = Thread(target=ov_model.generate, kwargs=generate_kwargs)
+    t = Thread(target=model.generate, kwargs=generate_kwargs)
     t.start()
 
     # Pull the generated text from the streamer, and update the model output.
@@ -159,13 +153,13 @@ def select_device(device_str: str,
     Returns:
       current_text
     """
-    if device_str != ov_model._device:
-        ov_model.request = None
-        ov_model._device = device_str
+    if device_str != model._device:
+        model.request = None
+        model._device = device_str
 
         for i in progress.tqdm(range(1),
                                desc=f"Model loading on {device_str}"):
-            ov_model.compile()
+            model.compile()
     return current_text
 
 

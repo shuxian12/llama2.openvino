@@ -1,5 +1,6 @@
 from transformers import LlamaTokenizer
 from openvino.runtime import Core, Tensor
+from pathlib import Path
 import numpy as np
 import argparse
 import time
@@ -95,10 +96,10 @@ if __name__ == "__main__":
                         action='help',
                         help='Show this help message and exit.')
     parser.add_argument('-m',
-                        '--model_id',
+                        '--model_path',
                         required=True,
                         type=str,
-                        help='Required. hugging face model id')
+                        help='Required. path of IR model and tokenizer')
     parser.add_argument('-p',
                         '--prompt',
                         required=True,
@@ -126,10 +127,16 @@ if __name__ == "__main__":
 
     num_pkv = 2
     core = Core()
-
+    ir_model_path = Path(args.model_path)
+    ir_model = ir_model_path / "openvino_model.xml"
+    
+    print(" --- load tokenizer --- ")
+    tokenizer = LlamaTokenizer.from_pretrained(args.model_path)
+    inputs = tokenizer(args.prompt, return_tensors="np")
+    
     print(" --- reading model --- ")
     # read the model and corresponding weights from file
-    model = core.read_model('../ir_model/openvino_model.xml')
+    model = core.read_model(ir_model)
     input_names = {
         key.get_any_name(): idx
         for idx, key in enumerate(model.inputs)
@@ -145,9 +152,6 @@ if __name__ == "__main__":
     # compile the model for CPU devices
     request = core.compile_model(
         model=model, device_name=args.device).create_infer_request()
-
-    tokenizer = LlamaTokenizer.from_pretrained(args.model_id)
-    inputs = tokenizer(args.prompt, return_tensors="np")
 
     print(" --- start generating --- ")
     start = time.perf_counter()

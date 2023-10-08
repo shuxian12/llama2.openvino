@@ -21,12 +21,10 @@ def build_inputs(history: list[tuple[str, str]],
 
 
 class LlamaModel():
-
     def __init__(self,
-                 tokenizer_path,
-                 device='CPU',
-                 model_path='../ir_model_chat') -> None:
-        self.tokenizer = LlamaTokenizer.from_pretrained(tokenizer_path,
+                 model_path,
+                 device='CPU') -> None:
+        self.tokenizer = LlamaTokenizer.from_pretrained(model_path,
                                                         trust_remote_code=True)
         self.ov_model = OVModelForCausalLM.from_pretrained(model_path,
                                                            compile=False,

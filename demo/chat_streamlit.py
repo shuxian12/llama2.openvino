@@ -10,13 +10,11 @@ def create_model():
                         '--help',
                         action='help',
                         help='Show this help message and exit.')
-    parser.add_argument(
-        '-m',
-        '--model_id',
-        required=True,
-        type=str,
-        help='local model path or remote model id'
-    )
+    parser.add_argument('-m',
+                        '--model_id',
+                        required=True,
+                        type=str,
+                        help='local model path or remote model id')
     args = parser.parse_args()
     return LlamaModel(args.model_id)
 

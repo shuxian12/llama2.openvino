@@ -1,4 +1,4 @@
-from transformers import LlamaTokenizer
+from transformers import AutoTokenizer
 from optimum.intel.openvino import OVModelForCausalLM
 import time
 import argparse
@@ -33,15 +33,14 @@ parser.add_argument('-d',
 args = parser.parse_args()
 
 print(" --- load tokenizer --- ")
-tokenizer = LlamaTokenizer.from_pretrained(args.model_id)
+tokenizer = AutoTokenizer.from_pretrained(args.model_id)
 
 try:
     print(" --- use local model --- ")
-    model = OVModelForCausalLM.from_pretrained(args.model_id, compile=False, device=args.device)
+    model = OVModelForCausalLM.from_pretrained(args.model_id, device=args.device)
 except:
     print(" --- use remote model --- ")
-    model = OVModelForCausalLM.from_pretrained(args.model_id, compile=False, device=args.device, export=True)
-model.compile()
+    model = OVModelForCausalLM.from_pretrained(args.model_id, device=args.device, export=True)
 
 inputs = tokenizer(args.prompt, return_tensors="pt")
 
@@ -50,10 +49,10 @@ start = time.perf_counter()
 generate_ids = model.generate(inputs.input_ids,
                                  max_length=args.max_sequence_length)
 end = time.perf_counter()
-
+num_tokens = len(generate_ids[0])
 print(" --- text decoding --- ")
 output_text = tokenizer.batch_decode(generate_ids,
                                      skip_special_tokens=True,
                                      clean_up_tokenization_spaces=False)[0]
-print(f"Generation took {end - start:.3f} s on {args.device}")
+print(f"Generation of {num_tokens} tokens took {end - start:.3f} s on {args.device}")
 print(f"Response: {output_text}")

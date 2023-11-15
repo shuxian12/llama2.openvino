@@ -1,4 +1,4 @@
-from transformers import LlamaTokenizer, TextIteratorStreamer
+from transformers import AutoTokenizer, TextIteratorStreamer
 from optimum.intel.openvino import OVModelForCausalLM
 from threading import Thread
 
@@ -24,7 +24,7 @@ class LlamaModel():
     def __init__(self,
                  model_path,
                  device='CPU') -> None:
-        self.tokenizer = LlamaTokenizer.from_pretrained(model_path,
+        self.tokenizer = AutoTokenizer.from_pretrained(model_path,
                                                         trust_remote_code=True)
         self.ov_model = OVModelForCausalLM.from_pretrained(model_path,
                                                            compile=False,

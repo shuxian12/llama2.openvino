@@ -29,50 +29,36 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
     $ pip install -r requirements.txt
 
 
-## Deployment Method 1: OpenVINO IR pipeline, export IR model from HF Optimum-Intel or Transformers
+## Q&A Pipeline
 
 **1. Export IR model**
 
-    from Transformers:
+from Transformers:
 
     $ python3 export_ir.py -m 'meta-llama/Llama-2-7b-hf'
 
-    or from Optimum-Intel:
+or from Optimum-Intel:
 
     $ python3 export_op.py -m 'meta-llama/Llama-2-7b-hf'
 
-**1.1.  (Optional) Export IR model with int8 weight**
+or for GPTQ model:
 
-    $ python3 export_ir.py -m 'meta-llama/Llama-2-7b-hf' -cw=True
+    $ python3 export_op.py -m 'TheBloke/Llama-2-7B-Chat-GPTQ'
 
-**2. Run [Optimum-Intel OpenVINO pipeline](https://huggingface.co/docs/optimum/intel/inference)**
+**1.1.  (Optional) quantize local IR model with int8 or int4 weight**
+
+    $ python3 quantize.py -m 'ir_model' -p 'int4'
+
+
+**2.  Run pipeline**
+
+[Optimum-Intel OpenVINO pipeline](https://huggingface.co/docs/optimum/intel/inference):
 
     $ python3 ir_pipeline/generate_op.py -m "./ir_model" -p "what is openvino ?" -d "CPU"
 
-**3. (Optional) Run restructured pipeline**:
+or Restructured pipeline:
 
     $ python3 ir_pipeline/generate_ir.py -m "./ir_model" -p "what is openvino ?" -d "CPU"
-
-
-## (Optional) Deployment Method 2: ONNX pipeline, export ONNX model from HF Optimum
-- Please notice the step below will leadd large memory consumption, you have make sure your server should be with >256GB RAM
-
-**1. Export the ONNX model from HuggingFace Optimum and convert it to OpenVINO IR**:
-
-    $ cd onnx_pipeline
-
-    $ optimum-cli export onnx --model meta-llama/Llama-2-7b-hf ./onnx_model/
-
-    $ mkdir ir_model
-
-    $ mo -m ./onnx_model/decoder_model_merged.onnx -o ./ir_model/ --compress_to_fp16
-
-    $ rm ./onnx_model/ -rf
-
-**2. Run restructured pipeline**:
-
-    $ python3 generate_onnx.py -m  "meta-llama/Llama-2-7b-hf" -p "what is openvino ?" -d "CPU"
-
 
 ## Interactive demo
 

@@ -1,8 +1,8 @@
 from optimum.intel.openvino import OVModelForCausalLM
-from optimum.intel import OVQuantizer
-from transformers import LlamaTokenizer
+from transformers import AutoTokenizer
 import argparse
 from pathlib import Path
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(add_help=False)
@@ -21,28 +21,18 @@ if __name__ == "__main__":
                         default="./ir_model",
                         type=str,
                         help='Required. path to save the ir model')
-    parser.add_argument('-cw',
-                        '--compress_weight',
-                        required=False,
-                        default=False,
-                        type=bool,
-                        help='compress model weight')
-
     args = parser.parse_args()
 
     model_path = Path(args.output)
-    
+
     print(" --- exporting IR --- ")
     ov_model = OVModelForCausalLM.from_pretrained(args.model_id,
                                                   compile=False,
                                                   export=True)
-    if args.compress_weight == False:
-        ov_model.half()
-        ov_model.save_pretrained(model_path)
-    else:
-        quantizer = OVQuantizer.from_pretrained(ov_model, task="text-generation")
-        quantizer.quantize(save_directory=model_path, weights_only=True)
-        
+    print(" --- exporting fp16 model --- ")
+    ov_model.half()
+    ov_model.save_pretrained(model_path)
+
     print(" --- exporting tokenizer --- ")
-    tokenizer = LlamaTokenizer.from_pretrained(args.model_id)
+    tokenizer = AutoTokenizer.from_pretrained(args.model_id)
     tokenizer.save_pretrained(model_path)

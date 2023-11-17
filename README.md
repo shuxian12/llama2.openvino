@@ -6,12 +6,12 @@ This sample shows how to implement a llama-based model with OpenVINO runtime.
 
 - Please follow the Licence on HuggingFace and get the approval from Meta before downloading llama checkpoints, for more [information](https://huggingface.co/meta-llama/Llama-2-7b-hf)
 
-- Please notice this repository is only for a functional test and personal study, and you can try to quantize the model to further optimize the performance of it
+- Please notice this repository is only for a functional test and personal study.
 
 ## Requirements
 
 - Linux, Windows
-- Python >= 3.8.0
+- Python >= 3.9.0
 - CPU or GPU compatible with OpenVINO.
 - RAM: >=32GB
 - vRAM: >=8GB
@@ -41,11 +41,11 @@ or from Optimum-Intel:
 
     $ python3 export_op.py -m 'meta-llama/Llama-2-7b-hf'
 
-or for GPTQ model:
+or for #GPTQ model:
 
     $ python3 export_op.py -m 'TheBloke/Llama-2-7B-Chat-GPTQ'
 
-**1.1.  (Optional) quantize local IR model with int8 or int4 weight**
+**1.1.  (Optional) quantize local IR model with #int8 or #int4 weight**
 
     $ python3 quantize.py -m 'ir_model' -p 'int4'
 

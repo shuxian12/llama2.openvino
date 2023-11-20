@@ -49,6 +49,7 @@ or for #GPTQ model:
 
     $ python3 quantize.py -m 'ir_model' -p 'int4'
 
+For more information on quantization configuration, please refer to [weight compression](https://github.com/openvinotoolkit/nncf/blob/release_v270/docs/compression_algorithms/CompressWeights.md)
 
 **2.  Run pipeline**
 

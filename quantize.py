@@ -58,7 +58,9 @@ elif args.precision == "int8" and not gptq_applied:
     print(" --- exporting int8 model --- ")
     compressed_model = nncf.compress_weights(ov_model)
 else:
-    print(" Can not quantize a GPTQ model ")
+    raise RuntimeError(
+        "Can not quantize a GPTQ model"
+    )
 ov.save_model(compressed_model, compressed_model_path / "openvino_model.xml")
 shutil.copy(orignal_model_path / 'config.json', compressed_model_path / 'config.json')
 

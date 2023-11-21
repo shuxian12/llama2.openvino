@@ -69,6 +69,6 @@ or Restructured pipeline:
 
 **2. or chatbot demo with Streamlit**:
 
-    $ python3 export_ir.py -m 'meta-llama/Llama-2-7b-chat-hf' -o './ir_model_chat' # "-cw=True" to get model with int8 weight
+    $ python3 export_op.py -m 'meta-llama/Llama-2-7b-chat-hf' -o './ir_model_chat'
 
     $ streamlit run demo/chat_streamlit.py -- -m './ir_model_chat'

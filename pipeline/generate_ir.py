@@ -170,7 +170,7 @@ if __name__ == "__main__":
     key_value_output_names = [key for key in output_names if "present" in key]
 
     num_tokens = 0
-    while num_tokens == 0:
+    while num_tokens <= 1:
         max_rss_mem_consumption = ''
         max_shared_mem_consumption = ''
         mem_consumption.start_collect_mem_consumption_thread()

@@ -169,32 +169,35 @@ if __name__ == "__main__":
     key_value_input_names = [key for key in input_names if "key_values" in key]
     key_value_output_names = [key for key in output_names if "present" in key]
 
-    max_rss_mem_consumption = ''
-    max_shared_mem_consumption = ''
-    mem_consumption.start_collect_mem_consumption_thread()
-    mem_consumption.start_collect_memory_consumption()
+    num_tokens = 0
+    while num_tokens == 0:
+        max_rss_mem_consumption = ''
+        max_shared_mem_consumption = ''
+        mem_consumption.start_collect_mem_consumption_thread()
+        mem_consumption.start_collect_memory_consumption()
 
-    print(" --- model compiling --- ")
-    # compile the model for CPU devices
-    request = core.compile_model(
-        model=model, device_name=args.device).create_infer_request()
+        print(" --- model compiling --- ")
+        # compile the model for CPU devices
+        request = core.compile_model(
+            model=model, device_name=args.device).create_infer_request()
 
-    print(" --- start generating --- ")
-    start = time.perf_counter()
-    output_ids, num_tokens, latencies = generate_sequence(
-        args.sampling,
-        inputs["input_ids"],
-        inputs["attention_mask"],
-        eos_token_id=tokenizer.eos_token_id,
-        max_sequence_length=args.max_sequence_length,
-    )
-    end = time.perf_counter()
-    mem_consumption.end_collect_momory_consumption()
-    max_rss_mem_consumption, max_shared_mem_consumption = mem_consumption.get_max_memory_consumption()
-    mem_consumption.clear_max_memory_consumption()
+        print(" --- start generating --- ")
+        start = time.perf_counter()
+        output_ids, num_tokens, latencies = generate_sequence(
+            args.sampling,
+            inputs["input_ids"],
+            inputs["attention_mask"],
+            eos_token_id=tokenizer.eos_token_id,
+            max_sequence_length=args.max_sequence_length,
+        )
+        end = time.perf_counter()
+        mem_consumption.end_collect_momory_consumption()
+        max_rss_mem_consumption, max_shared_mem_consumption = mem_consumption.get_max_memory_consumption()
+        mem_consumption.clear_max_memory_consumption()
+        mem_consumption.end_collect_mem_consumption_thread()
+    
     output_text = " "
     # Convert IDs to words and make the sentence from it
-
     print(" --- text decoding --- ")
     output_text = tokenizer.batch_decode(output_ids,
                                          skip_special_tokens=True,
@@ -206,7 +209,8 @@ if __name__ == "__main__":
     print(
         f"Generated {num_tokens} tokens in {end - start:.2f} s on {args.device}")
     print(
+        f"Average throughput: {num_tokens/(end - start):.2f} tokens/s on {args.device}, {(end - start)/num_tokens:.4f} s/token")
+    print(
         f"Maximum rss memory consumption: {max_rss_mem_consumption:.2f} MB, Maximum shared memory consumption: {max_shared_mem_consumption:.2f}  MB")
     print(
         f"First inference latency: {1000*latencies[0]:.2f} ms/token, Other inference latency {1000*latencies[1]/(num_tokens-1):.2f} ms/token in average")
-    mem_consumption.end_collect_mem_consumption_thread()
